@@ -1,0 +1,6 @@
+{
+  "name": "Ahmedabad University Course Matcher",
+  "description": "A minimal, clean course discovery tool for Ahmedabad University students to find their next semester courses through a 5-question survey and curated category exploration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

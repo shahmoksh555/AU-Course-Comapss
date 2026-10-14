@@ -79,7 +79,8 @@ export default function App() {
       eligible,
       data.objective,
       data.surveyAnswers,
-      data.context
+      data.context,
+      data.category
     );
 
     setRecommendations(results);

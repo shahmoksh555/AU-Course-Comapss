@@ -494,7 +494,7 @@ export const StudentJourney: React.FC<StudentJourneyProps> = ({
                 Free Elective / Outside-Major Elective
               </div>
               <p className="text-xs sm:text-sm text-stone-500">
-                Courses outside your major that do not fulfill School Core, Programme Core, Major Core, or Major Elective requirements.
+                Courses outside your major requirements. Excludes your School Core, Programme Core, Major Core, and your major's specific electives; Major Electives from other majors are eligible and recommended.
               </p>
             </div>
             <div

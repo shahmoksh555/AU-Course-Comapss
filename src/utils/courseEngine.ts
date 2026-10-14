@@ -59,6 +59,7 @@ export function getCompulsoryCourseCodes(student: StudentContext): Set<string> {
 }
 
 // 4. Major Elective Pool Codes
+// Exclusively returns the Major Electives belonging to the student's selected major.
 export function getMajorElectivePoolCodes(student: StudentContext): Set<string> {
   const curriculum = getCurriculumForYear(student.year);
   const pool = new Set<string>();
@@ -75,13 +76,37 @@ export function getMajorElectivePoolCodes(student: StudentContext): Set<string> 
   return pool;
 }
 
+// 4b. Other Major Elective Origins Lookup
+// Identifies if a course belongs to a Major Elective pool of any OTHER major.
+// Major Electives from other majors are explicitly eligible as Free Electives.
+export function getOtherMajorElectiveOrigins(
+  courseCode: string,
+  student: StudentContext
+): string[] {
+  const curriculum = getCurriculumForYear(student.year);
+  const otherMajors = new Set<string>();
+
+  for (const item of curriculum.majorElectives) {
+    if (item.courseCode === courseCode) {
+      if (item.programmeId !== student.programmeId || item.majorId !== student.majorId) {
+        const majorMeta = curriculum.majors.find((m) => m.id === item.majorId);
+        otherMajors.add(majorMeta ? majorMeta.name : item.majorId);
+      }
+    }
+  }
+
+  return Array.from(otherMajors);
+}
+
 // 5. Eligible Courses Calculation
+// Excludes School Core, Programme Core, Major Core, and ONLY the Major Electives
+// belonging to the student's selected major. Major Electives from other majors
+// are NOT excluded and may be recommended as Free Electives.
 export function getEligibleCourses(
   student: StudentContext,
   category: CourseCategoryType,
   gerCategory?: GERSubCategory
 ): CourseMasterItem[] {
-  const winterOfferingsSet = new Set(WINTER_2027_OFFERINGS);
   const compulsoryCodes = getCompulsoryCourseCodes(student);
   const majorElectiveCodes = getMajorElectivePoolCodes(student);
 
@@ -115,7 +140,9 @@ export function getEligibleCourses(
     }
 
     if (category === 'Free Elective / Outside-Major Elective') {
-      // Rule: Exclude courses belonging to student's compulsory and major-elective requirement pools
+      // Rule: Exclude School Core, Programme Core, Major Core, and only the
+      // Major Electives belonging to the student's selected major.
+      // Major Electives from other majors are NOT excluded and are eligible.
       if (compulsoryCodes.has(course.code) || majorElectiveCodes.has(course.code)) {
         return false;
       }
@@ -301,7 +328,8 @@ export function generateRecommendations(
   eligibleCourses: CourseMasterItem[],
   objective: PrimaryObjective,
   answers: Record<string, string>,
-  student: StudentContext
+  student: StudentContext,
+  category?: CourseCategoryType
 ): Recommendation[] {
   if (eligibleCourses.length === 0) {
     return [];
@@ -310,6 +338,10 @@ export function generateRecommendations(
   const scored = eligibleCourses.map((course) => {
     let score = 50; // base score
     const rationaleParts: string[] = [];
+
+    // Check if this course belongs to another major's elective pool
+    const otherMajorOrigins = getOtherMajorElectiveOrigins(course.code, student);
+    const isOtherMajorElective = otherMajorOrigins.length > 0;
 
     // Objective Scoring Signal
     switch (objective) {
@@ -409,6 +441,14 @@ export function generateRecommendations(
       }
     }
 
+    // Free Elective specific rationale: highlight if it's an elective from another major
+    if (category === 'Free Elective / Outside-Major Elective' && isOtherMajorElective) {
+      score += 4; // slight affinity bonus for curated cross-major electives
+      rationaleParts.push(
+        `Major Elective from ${otherMajorOrigins.slice(0, 2).join(' / ')}, fully eligible as your Free Elective.`
+      );
+    }
+
     // Level check
     if (course.level === 'Undergraduate') {
       score += 5;
@@ -424,6 +464,7 @@ export function generateRecommendations(
       course,
       score,
       explanation,
+      otherMajorOrigins,
     };
   });
 
@@ -446,6 +487,9 @@ export function generateRecommendations(
     const fitPercentage = Math.max(78, Math.min(98, rawPct));
 
     const tags: string[] = [item.course.school, `${item.course.credits} Credits`, item.course.level];
+    if (item.otherMajorOrigins.length > 0 && category === 'Free Elective / Outside-Major Elective') {
+      tags.push(`Elective from ${item.otherMajorOrigins[0]}`);
+    }
 
     return {
       course: item.course,

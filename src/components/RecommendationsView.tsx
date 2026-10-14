@@ -76,7 +76,7 @@ export const RecommendationsView: React.FC<RecommendationsViewProps> = ({
               <span className="font-medium text-[#b83e26]">{category}</span>
             </div>
             <p className="text-xs text-stone-500 max-w-2xl leading-relaxed">
-              Filtered exclusively from official Winter 2027 semester offerings. All compulsory core courses have been strictly excluded from your elective choices.
+              Filtered exclusively from official Winter 2027 semester offerings. All compulsory core courses and your major&apos;s specific electives are excluded; electives from other majors are eligible as Free Electives.
             </p>
           </div>
 

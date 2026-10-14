@@ -294,12 +294,16 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           })}
         </div>
       ) : (
-        <div className="text-center py-16 border border-dashed border-stone-200 rounded-lg p-8">
+        <div
+          role="status"
+          aria-live="polite"
+          className="text-center py-16 border border-dashed border-stone-200 rounded-lg p-8"
+        >
           <h3 className="text-base font-semibold text-stone-800 mb-2">
-            No courses match the active filters
+            No courses found
           </h3>
           <p className="text-xs text-stone-500 max-w-sm mx-auto mb-5 leading-relaxed">
-            Try choosing a different curated list, resetting search terms, or clearing school filters.
+            Check the course name or code, choose a different curated list, or clear the filters to see more courses.
           </p>
           <button
             onClick={() => {

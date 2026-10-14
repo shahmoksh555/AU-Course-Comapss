@@ -35,8 +35,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setActiveTab('survey')}
             className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'survey'
-                ? 'text-[#b83e26] bg-[#faf2f0]'
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                ? 'text-[#8f2817] bg-[#f6d9d2] shadow-sm ring-1 ring-[#b83e26]/25'
+                : 'text-stone-700 hover:text-[#8f2817] hover:bg-[#fff0eb]'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[#b83e26]" />
@@ -47,8 +47,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setActiveTab('explore')}
             className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'explore'
-                ? 'text-[#b83e26] bg-[#faf2f0]'
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                ? 'text-[#8f2817] bg-[#f6d9d2] shadow-sm ring-1 ring-[#b83e26]/25'
+                : 'text-stone-700 hover:text-[#8f2817] hover:bg-[#fff0eb]'
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
@@ -59,8 +59,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setActiveTab('shortlist')}
             className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'shortlist'
-                ? 'text-[#b83e26] bg-[#faf2f0]'
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                ? 'text-[#8f2817] bg-[#f6d9d2] shadow-sm ring-1 ring-[#b83e26]/25'
+                : 'text-stone-700 hover:text-[#8f2817] hover:bg-[#fff0eb]'
             }`}
           >
             <Bookmark className="w-3.5 h-3.5" />

@@ -16,11 +16,13 @@ import { ExploreView } from './components/ExploreView';
 import { ShortlistView } from './components/ShortlistView';
 import { CourseModal } from './components/CourseModal';
 import { LoginPage } from './components/LoginPage';
+import { PasswordResetPage } from './components/PasswordResetPage';
 import { supabase } from './lib/supabase';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authReady, setAuthReady] = useState(false);
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [activeTab, setActiveTab] = useState<'survey' | 'explore' | 'shortlist'>('survey');
   const [hasCompletedSurvey, setHasCompletedSurvey] = useState(false);
 
@@ -57,7 +59,8 @@ export default function App() {
       setAuthReady(true);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') setIsPasswordRecovery(true);
       setIsLoggedIn(Boolean(session));
       setAuthReady(true);
     });
@@ -132,6 +135,10 @@ export default function App() {
         <p className="text-sm">Restoring your secure session…</p>
       </main>
     );
+  }
+
+  if (isPasswordRecovery) {
+    return <PasswordResetPage onComplete={() => setIsPasswordRecovery(false)} />;
   }
 
   if (!isLoggedIn) {

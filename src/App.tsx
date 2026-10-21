@@ -15,8 +15,10 @@ import { RecommendationsView } from './components/RecommendationsView';
 import { ExploreView } from './components/ExploreView';
 import { ShortlistView } from './components/ShortlistView';
 import { CourseModal } from './components/CourseModal';
+import { LoginPage } from './components/LoginPage';
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState<'survey' | 'explore' | 'shortlist'>('survey');
   const [hasCompletedSurvey, setHasCompletedSurvey] = useState(false);
 
@@ -94,6 +96,11 @@ export default function App() {
     setActiveTab('survey');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Keep all existing course discovery functionality behind the entry screen.
+  if (!isLoggedIn) {
+    return <LoginPage onContinue={() => setIsLoggedIn(true)} />;
+  }
 
   // Shortlisted Course Master items
   const shortlistedCourses: CourseMasterItem[] = shortlistedCodes
